@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiztopia</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="src/styles.css">
+    <script src="src/script.js"></script>
+  </head>
+  <body>
+    <header>
+        <img src="assets/favicon.svg" alt="logo" width="48" height="48">
+        <hgroup>
+            <h1>Quiztopia</h1>
+            <p role="doc-subtitle">Ein Quiz für Kinder!</p>
+        </hgroup>
+        <select id="languageSelect">
+            <!-- Gets dynamically filled -->
+        </select>
+        </div>
+    </header>
+
+    <div class="file-input-container">
+        <button id="loadButton">Load Quiz</button>
+        <input type="file" id="fileInput" style="display:none;" accept=".json" tabindex="-1">
+    </div>
+    
+    <div id="errorContainer" class="error hidden"></div>
+    
+    <div id="quizContainer" class="hidden">
+        <div class="quiz-header">
+            <h2 id="quizTitle">Quiz Title</h2>
+            <p id="quizDescription">Quiz Description</p>
+            <div class="quiz-meta">
+                <span id="totalCategories">0 categories</span> | 
+                <span id="totalQuestions">0 questions</span> | 
+                <span id="maxPerCategory">Max 0 per category</span>
+            </div>
+        </div>
+
+        <div id="quizContent">
+            <div id="categoryList"></div>
+            
+            <div id="selectedQuestions">
+                <h3>Selected Questions <span id="selectedCount">(0/0)</span></h3>
+                <div id="selectedQuestionsList"></div>
+                <div class="selection-controls hidden" id="selectionControls">
+                    <button id="startQuizButton">Start Quiz</button>
+                    <button id="resetSelectionsButton">Reset Selections</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="jsonViewContainer" class="hidden">
+            <h3>JSON Data View</h3>
+            <button id="toggleJsonButton">Show Raw JSON</button>
+            <div id="jsonOutput" class="hidden"></div>
+        </div>
+
+    </div>
+
+  </body>
+</html>

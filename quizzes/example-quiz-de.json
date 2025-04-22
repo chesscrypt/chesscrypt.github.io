@@ -1,0 +1,241 @@
+{
+  "quizTitle": "Ultimative Wissensherausforderung",
+  "quizDescription": "Teste dein Wissen in verschiedenen Kategorien. Wähle bis zu 3 Fragen aus jeder Kategorie für eine maßgeschneiderte Herausforderung!",
+  "maxQuestionsPerCategory": 3,
+  "categories": [
+    {
+      "id": "science",
+      "name": "Wissenschaft",
+      "description": "Fragen zu Physik, Chemie, Biologie und anderen wissenschaftlichen Bereichen",
+      "icon": "flask",
+      "questions": [
+        {
+          "id": "sci-001",
+          "text": "Was ist das chemische Symbol für Gold?",
+          "difficulty": "einfach",
+          "points": 10,
+          "timeLimit": 20,
+          "options": [
+            {"id": "a", "text": "Go"},
+            {"id": "b", "text": "Au", "correct": true},
+            {"id": "c", "text": "Ag"},
+            {"id": "d", "text": "Gd"}
+          ],
+          "explanation": "Das chemische Symbol von Gold, Au, stammt von dem lateinischen Wort 'aurum', was Gold bedeutet."
+        },
+        {
+          "id": "sci-002",
+          "text": "Was ist der härteste natürliche Stoff auf der Erde?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "Titan"},
+            {"id": "b", "text": "Diamant", "correct": true},
+            {"id": "c", "text": "Platin"},
+            {"id": "d", "text": "Quarz"}
+          ],
+          "explanation": "Diamanten sind der härteste natürliche Stoff laut der Mohs-Skala der Mineralhärte."
+        },
+        {
+          "id": "sci-003",
+          "text": "Welcher Planet hat die meisten Monde?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "Jupiter"},
+            {"id": "b", "text": "Saturn", "correct": true},
+            {"id": "c", "text": "Neptun"},
+            {"id": "d", "text": "Uranus"}
+          ],
+          "explanation": "Saturn hat die meisten bestätigten Monde mit 83 bekannten Monden."
+        },
+        {
+          "id": "sci-004",
+          "text": "Wie hoch ist die Lichtgeschwindigkeit im Vakuum?",
+          "difficulty": "schwierig",
+          "points": 20,
+          "timeLimit": 30,
+          "options": [
+            {"id": "a", "text": "300.000 km/s", "correct": true},
+            {"id": "b", "text": "150.000 km/s"},
+            {"id": "c", "text": "500.000 km/s"},
+            {"id": "d", "text": "1.000.000 km/s"}
+          ],
+          "explanation": "Die Lichtgeschwindigkeit im Vakuum beträgt ungefähr 299.792 Kilometer pro Sekunde, oft gerundet auf 300.000 km/s."
+        },
+        {
+          "id": "sci-005",
+          "text": "Welches dieser Elemente hat die höchste Ordnungszahl?",
+          "difficulty": "schwierig",
+          "points": 20,
+          "timeLimit": 30,
+          "options": [
+            {"id": "a", "text": "Blei"},
+            {"id": "b", "text": "Uran", "correct": true},
+            {"id": "c", "text": "Platin"},
+            {"id": "d", "text": "Quecksilber"}
+          ],
+          "explanation": "Uran hat eine Ordnungszahl von 92, was höher ist als Blei (82), Platin (78) und Quecksilber (80)."
+        }
+      ]
+    },
+    {
+      "id": "history",
+      "name": "Geschichte",
+      "description": "Fragen zu wichtigen historischen Ereignissen und Persönlichkeiten",
+      "icon": "monument",
+      "questions": [
+        {
+          "id": "hist-001",
+          "text": "In welchem Jahr endete der Zweite Weltkrieg?",
+          "difficulty": "einfach",
+          "points": 10,
+          "timeLimit": 20,
+          "options": [
+            {"id": "a", "text": "1943"},
+            {"id": "b", "text": "1944"},
+            {"id": "c", "text": "1945", "correct": true},
+            {"id": "d", "text": "1946"}
+          ],
+          "explanation": "Der Zweite Weltkrieg endete 1945 mit der Kapitulation Japans nach den Atombombenabwürfen auf Hiroshima und Nagasaki."
+        },
+        {
+          "id": "hist-002",
+          "text": "Wer war der erste Präsident der Vereinigten Staaten?",
+          "difficulty": "einfach",
+          "points": 10,
+          "timeLimit": 20,
+          "options": [
+            {"id": "a", "text": "Thomas Jefferson"},
+            {"id": "b", "text": "John Adams"},
+            {"id": "c", "text": "George Washington", "correct": true},
+            {"id": "d", "text": "Benjamin Franklin"}
+          ],
+          "explanation": "George Washington war der erste Präsident der Vereinigten Staaten von 1789 bis 1797."
+        },
+        {
+          "id": "hist-003",
+          "text": "Welche Zivilisation baute die antike Stadt Machu Picchu?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "Azteken"},
+            {"id": "b", "text": "Mayas"},
+            {"id": "c", "text": "Inka", "correct": true},
+            {"id": "d", "text": "Olmeken"}
+          ],
+          "explanation": "Machu Picchu wurde im 15. Jahrhundert von den Inka erbaut."
+        },
+        {
+          "id": "hist-004",
+          "text": "In welchem Jahr fiel die Berliner Mauer?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "1987"},
+            {"id": "b", "text": "1989", "correct": true},
+            {"id": "c", "text": "1991"},
+            {"id": "d", "text": "1993"}
+          ],
+          "explanation": "Die Berliner Mauer fiel am 9. November 1989 und markierte das symbolische Ende des Kalten Krieges in Europa."
+        },
+        {
+          "id": "hist-005",
+          "text": "Wer war die ägyptische Königin, die sich mit den römischen Führern Julius Caesar und Mark Anton verbündete?",
+          "difficulty": "schwierig",
+          "points": 20,
+          "timeLimit": 30,
+          "options": [
+            {"id": "a", "text": "Nofretete"},
+            {"id": "b", "text": "Hatschepsut"},
+            {"id": "c", "text": "Kleopatra", "correct": true},
+            {"id": "d", "text": "Isis"}
+          ],
+          "explanation": "Kleopatra VII. war die letzte aktive Herrscherin des ptolemäischen Königreichs Ägypten und bildete politische Allianzen mit Julius Caesar und Mark Anton."
+        }
+      ]
+    },
+    {
+      "id": "geography",
+      "name": "Geographie",
+      "description": "Fragen zu Ländern, Hauptstädten, Wahrzeichen und geografischen Merkmalen",
+      "icon": "globe",
+      "questions": [
+        {
+          "id": "geo-001",
+          "text": "Was ist die Hauptstadt von Japan?",
+          "difficulty": "einfach",
+          "points": 10,
+          "timeLimit": 20,
+          "options": [
+            {"id": "a", "text": "Seoul"},
+            {"id": "b", "text": "Peking"},
+            {"id": "c", "text": "Tokio", "correct": true},
+            {"id": "d", "text": "Bangkok"}
+          ],
+          "explanation": "Tokio ist die Hauptstadt und größte Stadt von Japan."
+        },
+        {
+          "id": "geo-002",
+          "text": "Welcher Fluss ist der längste der Welt?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "Amazonas"},
+            {"id": "b", "text": "Nil", "correct": true},
+            {"id": "c", "text": "Mississippi"},
+            {"id": "d", "text": "Yangtse"}
+          ],
+          "explanation": "Der Nilfluss gilt traditionell als der längste Fluss der Welt, obwohl der Amazonas auch als ernsthafter Konkurrent betrachtet wird."
+        },
+        {
+          "id": "geo-003",
+          "text": "Welcher Kontinent ist der größte der Erde?",
+          "difficulty": "einfach",
+          "points": 10,
+          "timeLimit": 20,
+          "options": [
+            {"id": "a", "text": "Afrika"},
+            {"id": "b", "text": "Asien", "correct": true},
+            {"id": "c", "text": "Nordamerika"},
+            {"id": "d", "text": "Europa"}
+          ],
+          "explanation": "Asien ist der größte Kontinent auf der Erde sowohl in Bezug auf Fläche als auch Bevölkerung."
+        },
+        {
+          "id": "geo-004",
+          "text": "Welche Inselgruppe gehört zu Dänemark?",
+          "difficulty": "mittel",
+          "points": 15,
+          "timeLimit": 25,
+          "options": [
+            {"id": "a", "text": "Färöer-Inseln", "correct": true},
+            {"id": "b", "text": "Kanaren"},
+            {"id": "c", "text": "Bermuda"},
+            {"id": "d", "text": "Azoren"}
+          ],
+          "explanation": "Die Färöer-Inseln gehören politisch zu Dänemark, obwohl sie eine eigene autonome Regierung haben."
+        },
+        {
+          "id": "geo-005",
+          "text": "Welches Land hat die größte Bevölkerung der Welt?",
+          "difficulty": "schwierig",
+          "points": 20,
+          "timeLimit": 30,
+          "options": [
+            {"id": "a", "text": "Indien"},
+            {"id": "b", "text": "USA"},
+            {"id": "c", "text": "China", "correct": true},
+            {"id": "d", "text": "Indonesien"}
+          ],
+          "explanation": "China hat mit über 1,4 Milliarden Menschen die größte Bevölkerung der Welt."
+        }
+      ]
+    }
+  ]
+}
