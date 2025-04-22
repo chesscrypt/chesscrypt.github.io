@@ -250,10 +250,6 @@
         </div>
     </main>
 
-    <audio id="correct-sound" src="/api/placeholder/400/320" preload="auto"></audio>
-    <audio id="incorrect-sound" src="/api/placeholder/400/320" preload="auto"></audio>
-    <audio id="activity-sound" src="/api/placeholder/400/320" preload="auto"></audio>
-
     <script>
         // Quiz-Konfiguration
         const QUESTIONS_PER_CATEGORY = 3; // Nach wie vielen Fragen wird eine Kategorie deaktiviert
@@ -455,9 +451,22 @@
         const progressBar = document.getElementById('progress-bar');
 
         // Audio-Elemente
-        const correctSound = document.getElementById('correct-sound');
-        const incorrectSound = document.getElementById('incorrect-sound');
-        const activitySound = document.getElementById('activity-sound');
+        const correctSound = new Audio('correct.mp3');
+        const incorrectSound = new Audio('wrong.mp3');
+        const activitySound = new Audio('activity.mp3');
+
+        function playCorrectSound() {
+            correctSound.currentTime = 0;
+            correctSound.play();
+        }
+        function playIncorrectSound() {
+            incorrectSound.currentTime = 0;
+            incorrectSound.play();
+        }
+        function playActivitySound() {
+            activitySound.currentTime = 0;
+            activitySound.play();
+        }
 
         // Quiz initialisieren
         function initQuiz() {
@@ -581,14 +590,14 @@
             // Sound abspielen
             if (selectedIndex === correctIndex) {
                 feedbackElem.textContent = 'Richtig!';
-                // correctSound.play();
+                playCorrectSound();
             } else {
                 feedbackElem.textContent = 'Falsch!';
                 document.body.classList.add('shake');
                 setTimeout(() => {
                     document.body.classList.remove('shake');
                 }, 500);
-                // incorrectSound.play();
+                playIncorrectSound()
             }
             
             // Antwortoptionen deaktivieren
@@ -636,7 +645,7 @@
             activityText.textContent = activity.question;
             
             // Soundeffekt und Animation
-            // activitySound.play();
+            playActivitySound()
             document.body.classList.add('flash');
             setTimeout(() => {
                 document.body.classList.remove('flash');
