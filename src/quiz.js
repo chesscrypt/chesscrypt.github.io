@@ -8,7 +8,6 @@ class Quiz {
     #totalQuestions = 0;
     #questionsAsked = {};
     #questionsUntilActivity;
-
     #sounds;
 
     constructor(
@@ -25,9 +24,9 @@ class Quiz {
 
         const soundAssetsPath = "src/assets/sounds"
         this.#sounds = {
-            correct: new Audio(`${soundAssetsPath}/correct.mp3`),
-            incorrect: new Audio(`${soundAssetsPath}/wrong.mp3`),
-            activity: new Audio(`${soundAssetsPath}/activity.mp3`)
+            correct: new Sound(`${soundAssetsPath}/correct.mp3`),
+            incorrect: new Sound(`${soundAssetsPath}/wrong.mp3`),
+            activity: new Sound(`${soundAssetsPath}/activity.mp3`)
         }
 
         this.#init();
@@ -102,7 +101,6 @@ class Quiz {
 
             this.#showQuestion(category, category.questions[questionIndex]);
         } else {
-            // Wenn keine Fragen mehr verfügbar, zurück zu Kategorien
             this.#backToCategories();
         }
     }
@@ -115,7 +113,6 @@ class Quiz {
         this.#domElements.categoryTitle.textContent = category.name;
         this.#domElements.questionText.textContent = question.question;
 
-        // Antwortoptionen anzeigen
         this.#domElements.optionsContainer.innerHTML = '';
         question.options.forEach((option, index) => {
             const optionElement = document.createElement('div');
@@ -137,14 +134,14 @@ class Quiz {
 
         if (selectedIndex === correctIndex) {
             this.#domElements.feedbackElem.textContent = 'Richtig!';
-            this.#playAudio(this.#sounds.correct);
+            this.#sounds.correct.play();
         } else {
             this.#domElements.feedbackElem.textContent = 'Falsch!';
             document.body.classList.add('shake');
             setTimeout(() => {
                 document.body.classList.remove('shake');
             }, 500);
-            this.#playAudio(this.#sounds.incorrect)
+            this.#sounds.incorrect.play()
         }
 
         // disable all answer options
@@ -165,7 +162,7 @@ class Quiz {
         this.#domElements.categoryView.style.display = 'block';
         this.#domElements.questionView.style.display = 'none';
         this.#domElements.activityView.style.display = 'none';
-        this.#stopAudio(this.#sounds.activity)
+        this.#sounds.activity.stop();
 
         this.#renderCategories();
 
@@ -185,7 +182,7 @@ class Quiz {
 
         this.#domElements.activityText.textContent = activity.question;
 
-        this.#playAudioInLoop(this.#sounds.activity);
+        this.#sounds.activity.playInLoop();
         document.body.classList.add('flash');
         setTimeout(() => {
             document.body.classList.remove('flash');
@@ -196,21 +193,6 @@ class Quiz {
         this.#domElements.answeredCountElem.textContent = this.#answeredQuestions;
         const progressPercentage = (this.#answeredQuestions / this.#totalQuestions) * 100;
         this.#domElements.progressBar.style.width = `${progressPercentage}%`;
-    }
-
-    #playAudio(audio, inLoop = false) {
-        audio.currentTime = 0;
-        audio.play();
-    }
-
-    #playAudioInLoop(audio) {
-        audio.loop = true;
-        this.#playAudio(audio);
-    }
-
-    #stopAudio(audio) {
-        audio.loop = false;
-        audio.pause();
     }
 
 }
