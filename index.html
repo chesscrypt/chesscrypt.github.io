@@ -465,6 +465,7 @@
         }
         function playActivitySound() {
             activitySound.currentTime = 0;
+            activitySound.loop = true;
             activitySound.play();
         }
 
@@ -621,6 +622,8 @@
             categoryView.style.display = 'block';
             questionView.style.display = 'none';
             activityView.style.display = 'none';
+            activitySound.loop = false;
+            activitySound.pause();
             
             // Kategorien neu rendern
             renderCategories();
