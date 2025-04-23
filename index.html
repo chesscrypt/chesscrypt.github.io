@@ -1,228 +1,36 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz WebApp</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f5f5f7;
-            color: #333;
-        }
-        header {
-            background-color: #4b6cb7;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            width: 100%;
-            margin-bottom: 2rem;
-        }
-        .category {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border: 2px solid transparent;
-        }
-        .category:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            border-color: #4b6cb7;
-        }
-        .category.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background-color: #e0e0e0;
-        }
-        .category.disabled:hover {
-            transform: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-color: transparent;
-        }
-        .question-container {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 2rem;
-            width: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            display: none;
-        }
-        .question {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .options {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .option {
-            background-color: #f0f2ff;
-            border: 2px solid #d0d8ff;
-            border-radius: 8px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .option:hover {
-            background-color: #e0e6ff;
-            transform: translateY(-2px);
-        }
-        .option.correct {
-            background-color: #c8f7c5;
-            border-color: #5cb85c;
-        }
-        .option.incorrect {
-            background-color: #ffcdd2;
-            border-color: #d9534f;
-        }
-        .activity-question {
-            background-color: #ffeb3b;
-            border-radius: 8px;
-            padding: 2rem;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            text-align: center;
-            display: none;
-            animation: pulse 1.5s infinite;
-            border: 3px solid #ff9800;
-        }
-        .activity-title {
-            font-size: 2rem;
-            color: #d32f2f;
-            margin-bottom: 1rem;
-        }
-        .activity-description {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .btn {
-            background-color: #4b6cb7;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 1rem;
-        }
-        .btn:hover {
-            background-color: #3a5ba0;
-        }
-        .feedback {
-            margin-top: 1.5rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            min-height: 2rem;
-        }
-        .stats {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        .progress-container {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            margin: 1rem 0;
-            height: 10px;
-        }
-        .progress-bar {
-            height: 100%;
-            border-radius: 4px;
-            background-color: #4b6cb7;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
-            }
-        }
-        
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            10% { transform: translate(-10px, 0); }
-            20% { transform: translate(10px, 0); }
-            30% { transform: translate(-10px, 0); }
-            40% { transform: translate(10px, 0); }
-            50% { transform: translate(-10px, 0); }
-            60% { transform: translate(10px, 0); }
-            70% { transform: translate(-10px, 0); }
-            80% { transform: translate(10px, 0); }
-            90% { transform: translate(-10px, 0); }
-            100% { transform: translate(0, 0); }
-        }
-        
-        .shake {
-            animation: shake 0.5s;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .flash {
-            animation: flash 1s;
-        }
-        
-        @keyframes flash {
-            0% { background-color: transparent; }
-            50% { background-color: rgba(255, 215, 0, 0.5); }
-            100% { background-color: transparent; }
-        }
-    </style>
+    <link rel="icon" href="./src/assets/images/favicon.svg" sizes="any" type="image/svg+xml">
+    <link rel="stylesheet" href="./src/assets/styles/main.css" media="all" title="Main Stylesheet" />
 </head>
+
 <body>
     <header>
-        <h1>Ultimate Quiz Challenge</h1>
+        <img src="./src/assets/images/favicon.svg" alt="logo" width="48" height="48">
+        <h1>Quiztopia</h1>
+        <img src="./src/assets/images/favicon.svg" alt="logo" width="48" height="48">
     </header>
-    
+
     <main>
-        <div id="category-view">
+        <div id="choose-quiz-view">
+            <h2>Wähle ein Quiz</h2>
+            <div id="quizes-container" class="quizes">
+                <div id="example-quiz-btn" class="category">Beispiel Quiz</div>
+            </div>
+            <div class="file-input-container">
+                <button id="load-btn">Eigenes Quiz laden</button>
+                <input type="file" id="file-input" style="display:none;" accept=".json" tabindex="-1">
+            </div>
+        </div>
+
+        <div id="category-view" class="category-container">
             <h2>Wähle eine Kategorie</h2>
-            <div class="categories" id="categories-container">
+            <div id="categories-container" class="categories">
                 <!-- Kategorien werden per JavaScript hinzugefügt -->
             </div>
             <div class="stats">
@@ -232,7 +40,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="question-view" class="question-container">
             <h2 id="category-title">Kategorie</h2>
             <div class="question" id="question-text">Hier erscheint die Frage</div>
@@ -242,428 +50,61 @@
             <div class="feedback" id="feedback"></div>
             <button class="btn hidden" id="next-btn">Weiter</button>
         </div>
-        
+
         <div id="activity-view" class="activity-question">
             <h2 class="activity-title">MITMACH-RUNDE!</h2>
             <div class="activity-description" id="activity-text">Hier erscheint die Aktivitätsaufgabe</div>
             <button class="btn" id="activity-done-btn">Fertig</button>
         </div>
+
+        <script src="./src/assets/quiz-data.js"></script>
+        <script src="./src/i18n.js"></script>
+        <script src="./src/json.js"></script>
+        <script src="./src/quiz.js"></script>
+        <script>
+            const QUESTIONS_PER_CATEGORY = 3;
+            const QUESTIONS_BEFORE_ACTIVITY = 5;
+
+            const exampleQuizBtn = document.getElementById('example-quiz-btn');
+            const loadButton = document.getElementById('load-btn');
+            const fileInput = document.getElementById('file-input');
+
+            exampleQuizBtn.addEventListener('click', () => startQuiz(exampleQuizData));
+            loadButton.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', () => {
+                loadJsonFromInput(fileInput).then(quizData => {
+                    startQuiz(quizData);
+                }).catch(error => {
+                    console.error("Error loading quiz data:", error);
+                });
+            });
+
+            function startQuiz(quizData) {
+                const chooseQuizView = document.getElementById('choose-quiz-view');
+                const categoryView = document.getElementById('category-view');
+                chooseQuizView.style.display = 'none';
+                categoryView.style.display = 'block';
+
+                let domElements = {
+                    categoryView: categoryView,
+                    questionView: document.getElementById('question-view'),
+                    activityView: document.getElementById('activity-view'),
+                    categoriesContainer: document.getElementById('categories-container'),
+                    questionText: document.getElementById('question-text'),
+                    categoryTitle: document.getElementById('category-title'),
+                    optionsContainer: document.getElementById('options-container'),
+                    feedbackElem: document.getElementById('feedback'),
+                    nextBtn: document.getElementById('next-btn'),
+                    activityText: document.getElementById('activity-text'),
+                    activityDoneBtn: document.getElementById('activity-done-btn'),
+                    answeredCountElem: document.getElementById('answered-count'),
+                    totalQuestionsElem: document.getElementById('total-questions'),
+                    progressBar: document.getElementById('progress-bar'),
+                }
+                const game = new Quiz(quizData, domElements, QUESTIONS_PER_CATEGORY, QUESTIONS_BEFORE_ACTIVITY);
+            }
+        </script>
     </main>
-
-    <script>
-        // Quiz-Konfiguration
-        const QUESTIONS_PER_CATEGORY = 3; // Nach wie vielen Fragen wird eine Kategorie deaktiviert
-        const QUESTIONS_BEFORE_ACTIVITY = 5; // Nach wie vielen beantworteten Fragen kommt eine Mitmachrunde
-        
-        // Quiz-Daten
-        const quizData = {
-            categories: [
-                {
-                    name: "Geschichte",
-                    questions: [
-                        {
-                            type: "multiple-choice",
-                            question: "In welchem Jahr endete der Zweite Weltkrieg in Europa?",
-                            options: ["1944", "1945", "1946", "1947"],
-                            correctAnswer: 1
-                        },
-                        {
-                            type: "true-false",
-                            question: "Die Berliner Mauer fiel im Jahr 1989.",
-                            options: ["Wahr", "Falsch"],
-                            correctAnswer: 0
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?",
-                            options: ["Willy Brandt", "Helmut Schmidt", "Konrad Adenauer", "Helmut Kohl"],
-                            correctAnswer: 2
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welches Ereignis löste den Ersten Weltkrieg aus?",
-                            options: ["Die Ermordung von Franz Ferdinand", "Die Invasion Polens", "Der Überfall auf Pearl Harbor", "Die Oktoberrevolution"],
-                            correctAnswer: 0
-                        }
-                    ]
-                },
-                {
-                    name: "Wissenschaft",
-                    questions: [
-                        {
-                            type: "multiple-choice",
-                            question: "Was ist die chemische Formel für Wasser?",
-                            options: ["CO2", "H2O", "NaCl", "O2"],
-                            correctAnswer: 1
-                        },
-                        {
-                            type: "true-false",
-                            question: "Schallwellen können sich im Vakuum ausbreiten.",
-                            options: ["Wahr", "Falsch"],
-                            correctAnswer: 1
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welches Element hat die Ordnungszahl 1 im Periodensystem?",
-                            options: ["Helium", "Sauerstoff", "Wasserstoff", "Stickstoff"],
-                            correctAnswer: 2
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welche Planeten in unserem Sonnensystem hat Ringe?",
-                            options: ["Mars und Jupiter", "Jupiter und Saturn", "Saturn und Uranus", "Uranus und Neptun"],
-                            correctAnswer: 2
-                        }
-                    ]
-                },
-                {
-                    name: "Sport",
-                    questions: [
-                        {
-                            type: "multiple-choice",
-                            question: "Wie viele Spieler hat eine Fußballmannschaft auf dem Feld?",
-                            options: ["9", "10", "11", "12"],
-                            correctAnswer: 2
-                        },
-                        {
-                            type: "true-false",
-                            question: "Die olympischen Winterspiele finden alle vier Jahre statt.",
-                            options: ["Wahr", "Falsch"],
-                            correctAnswer: 0
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "In welcher Stadt fanden die Olympischen Sommerspiele 2021 statt?",
-                            options: ["Paris", "Tokio", "London", "Rio de Janeiro"],
-                            correctAnswer: 1
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welches Land hat die meisten FIFA Weltmeisterschaften gewonnen?",
-                            options: ["Deutschland", "Argentinien", "Italien", "Brasilien"],
-                            correctAnswer: 3
-                        }
-                    ]
-                },
-                {
-                    name: "Filme & Serien",
-                    questions: [
-                        {
-                            type: "multiple-choice",
-                            question: "Wer spielte die Hauptrolle in 'Forrest Gump'?",
-                            options: ["Tom Hanks", "Brad Pitt", "Leonardo DiCaprio", "Johnny Depp"],
-                            correctAnswer: 0
-                        },
-                        {
-                            type: "true-false",
-                            question: "'Breaking Bad' handelt von einem Chemielehrer, der Drogen herstellt.",
-                            options: ["Wahr", "Falsch"],
-                            correctAnswer: 0
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Wie viele Filme gibt es in der ursprünglichen 'Star Wars'-Trilogie?",
-                            options: ["3", "6", "9", "12"],
-                            correctAnswer: 0
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welcher Film gewann 2020 den Oscar für den besten Film?",
-                            options: ["1917", "Joker", "Parasite", "Once Upon a Time in Hollywood"],
-                            correctAnswer: 2
-                        }
-                    ]
-                },
-                {
-                    name: "Geographie",
-                    questions: [
-                        {
-                            type: "multiple-choice",
-                            question: "Was ist die Hauptstadt von Australien?",
-                            options: ["Sydney", "Melbourne", "Canberra", "Perth"],
-                            correctAnswer: 2
-                        },
-                        {
-                            type: "true-false",
-                            question: "Der Amazonas ist der längste Fluss der Welt.",
-                            options: ["Wahr", "Falsch"],
-                            correctAnswer: 1
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "Welches Land hat die größte Fläche?",
-                            options: ["China", "USA", "Kanada", "Russland"],
-                            correctAnswer: 3
-                        },
-                        {
-                            type: "multiple-choice",
-                            question: "An welches Land grenzt Deutschland nicht?",
-                            options: ["Frankreich", "Österreich", "Spanien", "Luxemburg"],
-                            correctAnswer: 2
-                        }
-                    ]
-                }
-            ],
-            activityQuestions: [
-                {
-                    question: "Alle Teilnehmer müssen aufstehen und 10 Hampelmänner machen! Los geht's!"
-                },
-                {
-                    question: "Jeder Teilnehmer muss rückwärts zählen von 20 bis 0!"
-                },
-                {
-                    question: "Alle singen gemeinsam den Refrain ihres Lieblingsliedes!"
-                },
-                {
-                    question: "Wer kann am längsten auf einem Bein stehen? Alle mitmachen!"
-                },
-                {
-                    question: "Jeder muss reihum einen Zungenbrecher aufsagen!"
-                }
-            ]
-        };
-
-        // Spielstand
-        const gameState = {
-            categoriesUsed: {}, // Zählt, wie oft jede Kategorie verwendet wurde
-            answeredQuestions: 0, // Gesamtzahl beantworteter Fragen
-            totalQuestions: 0, // Gesamtzahl der verfügbaren Fragen (ohne Aktivitätsfragen)
-            questionsAsked: {}, // Speichert, welche Fragen bereits gestellt wurden
-            questionsUntilActivity: QUESTIONS_BEFORE_ACTIVITY, // Zähler für nächste Aktivitätsfrage
-            currentCategory: null,
-            currentQuestion: null
-        };
-
-        // DOM-Elemente
-        const categoryView = document.getElementById('category-view');
-        const questionView = document.getElementById('question-view');
-        const activityView = document.getElementById('activity-view');
-        const categoriesContainer = document.getElementById('categories-container');
-        const questionText = document.getElementById('question-text');
-        const categoryTitle = document.getElementById('category-title');
-        const optionsContainer = document.getElementById('options-container');
-        const feedbackElem = document.getElementById('feedback');
-        const nextBtn = document.getElementById('next-btn');
-        const activityText = document.getElementById('activity-text');
-        const activityDoneBtn = document.getElementById('activity-done-btn');
-        const answeredCountElem = document.getElementById('answered-count');
-        const totalQuestionsElem = document.getElementById('total-questions');
-        const progressBar = document.getElementById('progress-bar');
-
-        // Audio-Elemente
-        const correctSound = new Audio('correct.mp3');
-        const incorrectSound = new Audio('wrong.mp3');
-        const activitySound = new Audio('activity.mp3');
-
-        function playCorrectSound() {
-            correctSound.currentTime = 0;
-            correctSound.play();
-        }
-        function playIncorrectSound() {
-            incorrectSound.currentTime = 0;
-            incorrectSound.play();
-        }
-        function playActivitySound() {
-            activitySound.currentTime = 0;
-            activitySound.loop = true;
-            activitySound.play();
-        }
-
-        // Quiz initialisieren
-        function initQuiz() {
-            // Zähle Gesamtanzahl der Fragen
-            quizData.categories.forEach(category => {
-                gameState.totalQuestions += category.questions.length;
-            });
-            
-            // Zeige Gesamtanzahl an
-            totalQuestionsElem.textContent = gameState.totalQuestions;
-            
-            // Kategorien anzeigen
-            renderCategories();
-            
-            // Event-Listener hinzufügen
-            nextBtn.addEventListener('click', backToCategories);
-            activityDoneBtn.addEventListener('click', backToCategories);
-        }
-
-        // Kategorien anzeigen
-        function renderCategories() {
-            categoriesContainer.innerHTML = '';
-            
-            quizData.categories.forEach((category, index) => {
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category';
-                categoryElement.textContent = category.name;
-                
-                // Prüfen, ob Kategorie deaktiviert werden soll
-                const usedCount = gameState.categoriesUsed[index] || 0;
-                
-                // Kategorie deaktivieren, wenn max. Anzahl erreicht oder alle Fragen gestellt
-                let allAsked = true;
-                for (let i = 0; i < category.questions.length; i++) {
-                    const questionKey = `${index}-${i}`;
-                    if (!gameState.questionsAsked[questionKey]) {
-                        allAsked = false;
-                        break;
-                    }
-                }
-                
-                if (usedCount >= QUESTIONS_PER_CATEGORY || allAsked) {
-                    categoryElement.classList.add('disabled');
-                } else {
-                    categoryElement.addEventListener('click', () => selectCategory(index));
-                }
-                
-                categoriesContainer.appendChild(categoryElement);
-            });
-        }
-
-        // Kategorie auswählen
-        function selectCategory(categoryIndex) {
-            gameState.currentCategory = categoryIndex;
-            
-            // Kategorie als verwendet markieren
-            if (!gameState.categoriesUsed[categoryIndex]) {
-                gameState.categoriesUsed[categoryIndex] = 0;
-            }
-            gameState.categoriesUsed[categoryIndex]++;
-            
-            // Zufällige, noch nicht gestellte Frage auswählen
-            const category = quizData.categories[categoryIndex];
-            const availableQuestions = [];
-            
-            for (let i = 0; i < category.questions.length; i++) {
-                const questionKey = `${categoryIndex}-${i}`;
-                if (!gameState.questionsAsked[questionKey]) {
-                    availableQuestions.push(i);
-                }
-            }
-            
-            if (availableQuestions.length > 0) {
-                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-                const questionIndex = availableQuestions[randomIndex];
-                gameState.currentQuestion = questionIndex;
-                
-                // Frage als gestellt markieren
-                const questionKey = `${categoryIndex}-${questionIndex}`;
-                gameState.questionsAsked[questionKey] = true;
-                
-                // Frage anzeigen
-                showQuestion(category, category.questions[questionIndex]);
-            } else {
-                // Wenn keine Fragen mehr verfügbar, zurück zu Kategorien
-                backToCategories();
-            }
-        }
-
-        // Frage anzeigen
-        function showQuestion(category, question) {
-            categoryView.style.display = 'none';
-            questionView.style.display = 'block';
-            activityView.style.display = 'none';
-            
-            categoryTitle.textContent = category.name;
-            questionText.textContent = question.question;
-            
-            // Antwortoptionen anzeigen
-            optionsContainer.innerHTML = '';
-            question.options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'option';
-                optionElement.textContent = option;
-                optionElement.addEventListener('click', () => checkAnswer(index, question.correctAnswer));
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            feedbackElem.textContent = '';
-            nextBtn.classList.add('hidden');
-        }
-
-        // Antwort überprüfen
-        function checkAnswer(selectedIndex, correctIndex) {
-            const options = document.querySelectorAll('.option');
-            
-            // Antwort markieren und Feedback geben
-            options[selectedIndex].classList.add(selectedIndex === correctIndex ? 'correct' : 'incorrect');
-            options[correctIndex].classList.add('correct');
-            
-            // Sound abspielen
-            if (selectedIndex === correctIndex) {
-                feedbackElem.textContent = 'Richtig!';
-                playCorrectSound();
-            } else {
-                feedbackElem.textContent = 'Falsch!';
-                document.body.classList.add('shake');
-                setTimeout(() => {
-                    document.body.classList.remove('shake');
-                }, 500);
-                playIncorrectSound()
-            }
-            
-            // Antwortoptionen deaktivieren
-            options.forEach(option => {
-                option.style.pointerEvents = 'none';
-            });
-            
-            // Weiter-Button anzeigen
-            nextBtn.classList.remove('hidden');
-            
-            // Zähler erhöhen
-            gameState.answeredQuestions++;
-            gameState.questionsUntilActivity--;
-            
-            // Fortschritt aktualisieren
-            updateProgress();
-        }
-
-        // Zurück zur Kategorieauswahl
-        function backToCategories() {
-            categoryView.style.display = 'block';
-            questionView.style.display = 'none';
-            activityView.style.display = 'none';
-            activitySound.loop = false;
-            activitySound.pause();
-            
-            // Kategorien neu rendern
-            renderCategories();
-            
-            // Prüfen, ob Aktivitätsfrage angezeigt werden soll
-            if (gameState.questionsUntilActivity <= 0) {
-                setTimeout(showActivityQuestion, 100);
-                gameState.questionsUntilActivity = QUESTIONS_BEFORE_ACTIVITY;
-            }
-        }
-
-        // Aktivitätsfrage anzeigen
-        function showActivityQuestion() {
-            categoryView.style.display = 'none';
-            questionView.style.display = 'none';
-            activityView.style.display = 'block';
-            
-            // Zufällige Aktivitätsfrage auswählen
-            const randomIndex = Math.floor(Math.random() * quizData.activityQuestions.length);
-            const activity = quizData.activityQuestions[randomIndex];
-            
-            activityText.textContent = activity.question;
-            
-            // Soundeffekt und Animation
-            playActivitySound()
-            document.body.classList.add('flash');
-            setTimeout(() => {
-                document.body.classList.remove('flash');
-            }, 1000);
-        }
-
-        // Fortschritt aktualisieren
-        function updateProgress() {
-            answeredCountElem.textContent = gameState.answeredQuestions;
-            const progressPercentage = (gameState.answeredQuestions / gameState.totalQuestions) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-        }
-
-        // Quiz starten
-        initQuiz();
-    </script>
 </body>
+
 </html>
