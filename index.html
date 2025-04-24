@@ -7,6 +7,7 @@
     <title>Quiztopia</title>
     <link rel="icon" href="./src/assets/images/favicon.svg" sizes="any" type="image/svg+xml">
     <link rel="stylesheet" href="./src/assets/styles/main.css" media="all" title="Main Stylesheet" />
+    <link rel="stylesheet" href="./src/assets/styles/help.css" />
 </head>
 
 <body>
@@ -57,14 +58,157 @@
             <button class="btn" id="activity-done-btn">Fertig</button>
         </div>
 
+        <button id="help-btn" class="help-button" title="Hilfe">?</button>
+
+        <div id="help-modal" class="modal">
+            <div class="modal-content">
+                <button id="close-modal" class="close-button">&times;</button>
+                <div class="help-content">
+                    <h1>Anleitung für die Erstellung und das Laden eines Quizes</h1>
+
+                    <h2>Struktur der JSON-Datei</h2>
+                    <p>Deine Quiz-Datei sollte folgende Struktur haben:</p>
+                    <ul>
+                        <li>Ein Hauptobjekt mit drei Elementen:
+                            <ul>
+                                <li><code>config</code>: Enthält allgemeine Konfigurationsoptionen</li>
+                                <li><code>categories</code>: Enthält deine Fragenkategorien</li>
+                                <li><code>activityQuestions</code>: Enthält optionale Aktivitätsfragen</li>
+                            </ul>
+                        </li>
+                        <li>Die <code>config</code> enthält:
+                            <ul>
+                                <li><code>questionsPerCategory</code>: Anzahl der Fragen, die pro Kategorie verwendet werden sollen</li>
+                                <li><code>questionsBeforeActivity</code>: Nach wie vielen regulären Fragen eine Aktivitätsfrage eingeblendet werden soll</li>
+                            </ul>
+                        </li>
+                        <li>Jede Kategorie in <code>categories</code> hat:
+                            <ul>
+                                <li><code>name</code>: Name der Kategorie</li>
+                                <li><code>questions</code>: Array mit Fragen dieser Kategorie</li>
+                            </ul>
+                        </li>
+                        <li>Jede Frage im <code>questions</code>-Array hat:
+                            <ul>
+                                <li><code>type</code>: Fragetyp (aktuell "multiple-choice" oder "true-false")</li>
+                                <li><code>question</code>: Die eigentliche Frage</li>
+                                <li><code>options</code>: Array mit Antwortmöglichkeiten</li>
+                                <li><code>correctAnswer</code>: Index der richtigen Antwort (beginnend bei 0)</li>
+                            </ul>
+                        </li>
+                        <li>Jede Aktivitätsfrage im <code>activityQuestions</code>-Array hat:
+                            <ul>
+                                <li><code>question</code>: Die Aktivitätsanweisung</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h2>Beispiel einer einfachen Quiz-Datei</h2>
+                    <pre>{
+    "config": {
+        "questionsPerCategory": 2,
+        "questionsBeforeActivity": 3
+    },
+    "categories": [
+        {
+            "name": "Meine Kategorie",
+            "questions": [
+                {
+                    "type": "multiple-choice",
+                    "question": "Was ist 2+2?",
+                    "options": ["3", "4", "5", "6"],
+                    "correctAnswer": 1
+                },
+                {
+                    "type": "true-false",
+                    "question": "Die Erde ist eine Kugel.",
+                    "options": ["Wahr", "Falsch"],
+                    "correctAnswer": 0
+                }
+            ]
+        }
+    ],
+    "activityQuestions": [
+        {
+            "question": "Alle stehen auf und strecken sich!"
+        }
+    ]
+}</pre>
+
+                    <h2>Anleitung zum Erstellen einer eigenen Quiz-Datei</h2>
+                    <ol class="steps">
+                        <li><strong>Erstelle eine neue Datei</strong> mit der Endung <code>.json</code></li>
+                        <li><strong>Kopiere die Grundstruktur</strong> aus dem obigen Beispiel</li>
+                        <li><strong>Passe die Konfiguration an:</strong>
+                        <ul>
+                            <li>Lege fest, wie viele Fragen pro Kategorie verwendet werden sollen</li>
+                            <li>Bestimme, nach wie vielen regulären Fragen eine Aktivitätsfrage erscheinen soll</li>
+                        </ul>
+                        </li>
+                        <li><strong>Passe die Inhalte an:</strong>
+                            <ul>
+                                <li>Füge deine eigenen Kategorien hinzu oder ändere bestehende</li>
+                                <li>Erstelle Fragen mit den Typen "multiple-choice" oder "true-false"</li>
+                                <li>Definiere die Antwortmöglichkeiten und gib den Index der richtigen Antwort an</li>
+                                <li>Ergänze optionale Aktivitätsfragen, die zwischen den regulären Fragen eingestreut
+                                    werden</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="note">
+                        <p><strong>Wichtige Hinweise:</strong></p>
+                        <ul>
+                            <li>Der <code>correctAnswer</code>-Wert ist der nullbasierte Index der richtigen Antwort im
+                                <code>options</code>-Array (0 für die erste Option, 1 für die zweite usw.)
+                            </li>
+                            <li>Bei "true-false"-Fragen sollte <code>options</code> immer ["Wahr", "Falsch"] enthalten
+                            </li>
+                            <li>Achte auf korrekte JSON-Syntax (Kommas richtig setzen, Anführungszeichen nicht
+                                vergessen)</li>
+                        </ul>
+                    </div>
+
+                    <h2>Laden der Quiz-Datei</h2>
+                    <p>Um deine eigene Quiz-Datei zu verwenden:</p>
+                    <ol>
+                        <li>Klicke auf den "Eigenes Quiz laden"-Button</li>
+                        <li>Wähle deine erstellte JSON-Datei aus</li>
+                        <li>Das System lädt deine Kategorien und Fragen und stellt sie im Quiz-Spiel zur Verfügung</li>
+                    </ol>
+
+                    <p>Du kannst so viele Kategorien und Fragen erstellen, wie du möchtest, um das Quiz an deine
+                        Bedürfnisse anzupassen!</p>
+
+                </div>
+            </div>
+        </div>
+
         <script src="./src/assets/quiz-data.js"></script>
         <script src="./src/i18n.js"></script>
         <script src="./src/json.js"></script>
         <script src="./src/sound.js"></script>
         <script src="./src/quiz.js"></script>
         <script>
-            const QUESTIONS_PER_CATEGORY = 3;
-            const QUESTIONS_BEFORE_ACTIVITY = 5;
+            // Handle help
+            const helpButton = document.getElementById('help-btn');
+            const helpModal = document.getElementById('help-modal');
+            const closeModal = document.getElementById('close-modal');
+
+            helpButton.addEventListener('click', function () {
+                helpModal.style.display = 'block';
+            });
+
+            closeModal.addEventListener('click', function () {
+                helpModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target === helpModal) {
+                    helpModal.style.display = 'none';
+                }
+            });
+
 
             const exampleQuizBtn = document.getElementById('example-quiz-btn');
             const loadButton = document.getElementById('load-btn');
@@ -102,7 +246,7 @@
                     totalQuestionsElem: document.getElementById('total-questions'),
                     progressBar: document.getElementById('progress-bar'),
                 }
-                const game = new Quiz(quizData, domElements, QUESTIONS_PER_CATEGORY, QUESTIONS_BEFORE_ACTIVITY);
+                const game = new Quiz(quizData, domElements);
             }
         </script>
     </main>

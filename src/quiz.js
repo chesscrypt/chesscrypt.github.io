@@ -1,8 +1,6 @@
 class Quiz {
     #quizData;
     #domElements;
-    #questionsPerCategory;
-    #questionsBeforeActivity;
     #categoriesUsed = {};
     #answeredQuestions = 0;
     #totalQuestions = 0;
@@ -10,16 +8,9 @@ class Quiz {
     #questionsUntilActivity;
     #sounds;
 
-    constructor(
-        quizData,
-        domElements,
-        questionsPerCategory,
-        questions_before_activity
-    ) {
+    constructor(quizData, domElements) {
         this.#quizData = quizData;
-        this.#questionsPerCategory = questionsPerCategory;
-        this.#questionsBeforeActivity = questions_before_activity;
-        this.#questionsUntilActivity = this.#questionsBeforeActivity
+        this.#questionsUntilActivity = this.#quizData.config.questionsBeforeActivity;
         this.#domElements = domElements;
 
         const soundAssetsPath = "src/assets/sounds"
@@ -65,7 +56,7 @@ class Quiz {
                 }
             }
 
-            if (usedCount >= this.#questionsPerCategory || allAsked) {
+            if (usedCount >= this.#quizData.config.questionsPerCategory || allAsked) {
                 categoryElement.classList.add('disabled');
             } else {
                 categoryElement.addEventListener('click', () => this.#selectCategory(index));
@@ -168,7 +159,7 @@ class Quiz {
 
         if (this.#questionsUntilActivity <= 0) {
             setTimeout(() => this.#showActivityQuestion(), 100);
-            this.#questionsUntilActivity = this.#questionsBeforeActivity;
+            this.#questionsUntilActivity = this.#quizData.config.questionsBeforeActivity;
         }
     }
 

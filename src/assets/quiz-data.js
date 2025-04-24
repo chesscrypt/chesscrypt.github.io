@@ -1,4 +1,8 @@
 const exampleQuizData = {
+    "config": {
+        "questionsPerCategory": 4,
+        "questionsBeforeActivity": 5
+    },
     "categories": [
         {
             "name": "Geschichte",
