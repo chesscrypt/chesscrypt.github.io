@@ -1,16 +1,16 @@
 class Quiz {
     #quizData;
     #domElements;
-    #categoriesUsed = {};
-    #answeredQuestions = 0;
-    #totalQuestions = 0;
-    #questionsAsked = {};
+    #detailedResults;
+    #categoriesUsed;
+    #answeredQuestions;
+    #totalQuestions;
+    #questionsAsked;
     #questionsUntilActivity;
     #sounds;
 
     constructor(quizData, domElements) {
         this.#quizData = quizData;
-        this.#questionsUntilActivity = this.#quizData.config.questionsBeforeActivity;
         this.#domElements = domElements;
 
         const soundAssetsPath = "src/assets/sounds"
@@ -24,16 +24,45 @@ class Quiz {
     }
 
     #init() {
+        this.#totalQuestions = 0;
+        this.#answeredQuestions = 0;
+        this.#categoriesUsed = {};
+        this.#questionsAsked = {};
+        this.#questionsUntilActivity = this.#quizData.config.questionsBeforeActivity;
+
         this.#quizData.categories.forEach(category => {
-            this.#totalQuestions += category.questions.length;
+            if (category.questions.length >= this.#quizData.config.questionsPerCategory) {
+                this.#totalQuestions += this.#quizData.config.questionsPerCategory;
+            }
+            else {
+                console.log("questions per category less than questions in category")
+                this.#totalQuestions += category.questions.length;
+            }
         });
 
         this.#domElements.totalQuestionsElem.textContent = this.#totalQuestions;
+        this.#detailedResults = [];
+
 
         this.#renderCategories();
+        this.#updateProgress();
 
-        this.#domElements.nextBtn.addEventListener('click', () => this.#backToCategories());
+        this.#domElements.nextBtn.addEventListener('click', () => {
+            if (this.#allQuestionsAsked()) {
+                const results = this.#calculateResults();
+                this.#showResults(results);
+            } else {
+                this.#backToCategories();
+            }
+        });
         this.#domElements.activityDoneBtn.addEventListener('click', () => this.#backToCategories());
+
+        this.#domElements.categoryView.style.display = 'block';
+        this.#domElements.resultsView.style.display = 'none';
+    }
+
+    #allQuestionsAsked() {
+        return this.#answeredQuestions >= this.#totalQuestions;
     }
 
     #renderCategories() {
@@ -109,7 +138,7 @@ class Quiz {
             const optionElement = document.createElement('div');
             optionElement.className = 'option';
             optionElement.textContent = option;
-            optionElement.addEventListener('click', () => this.#checkAnswer(index, question.correctAnswer));
+            optionElement.addEventListener('click', () => this.#checkAnswer(question, index, question.correctAnswer));
             this.#domElements.optionsContainer.appendChild(optionElement);
         });
 
@@ -117,13 +146,14 @@ class Quiz {
         this.#domElements.nextBtn.classList.add('hidden');
     }
 
-    #checkAnswer(selectedIndex, correctIndex) {
+    #checkAnswer(question, selectedIndex, correctIndex) {
+        const isCorrect = selectedIndex === correctIndex
         const options = document.querySelectorAll('.option');
 
-        options[selectedIndex].classList.add(selectedIndex === correctIndex ? 'correct' : 'incorrect');
+        options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
         options[correctIndex].classList.add('correct');
 
-        if (selectedIndex === correctIndex) {
+        if (isCorrect) {
             this.#domElements.feedbackElem.textContent = 'Richtig!';
             this.#sounds.correct.play();
         } else {
@@ -139,12 +169,15 @@ class Quiz {
         options.forEach(option => {
             option.style.pointerEvents = 'none';
         });
-
-        // show next button
         this.#domElements.nextBtn.classList.remove('hidden');
 
         this.#answeredQuestions++;
         this.#questionsUntilActivity--;
+        this.#detailedResults.push({
+            question: question,
+            selectedOptionIndex: selectedIndex,
+            correctOptionIndex: correctIndex,
+        })
 
         this.#updateProgress();
     }
@@ -184,6 +217,59 @@ class Quiz {
         this.#domElements.answeredCountElem.textContent = this.#answeredQuestions;
         const progressPercentage = (this.#answeredQuestions / this.#totalQuestions) * 100;
         this.#domElements.progressBar.style.width = `${progressPercentage}%`;
+    }
+
+    #calculateResults() {
+        let correctAnswers = 0;
+        let totalQuestions = this.#totalQuestions;
+        let detailedResults = [];
+        
+        this.#detailedResults.forEach((detailedResult) => {
+            const questionAsked = detailedResult.question;
+            const isCorrect = detailedResult.selectedOptionIndex === detailedResult.correctOptionIndex;
+            detailedResults.push({
+                question: questionAsked.question,
+                userAnswer: questionAsked.options[detailedResult.selectedOptionIndex],
+                correctAnswer: questionAsked.options[detailedResult.correctOptionIndex],
+                isCorrect: isCorrect
+            });
+            if (isCorrect) {
+                correctAnswers++;
+            }
+        });
+
+        const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+        return {
+            correctAnswers,
+            totalQuestions,
+            percentage,
+            detailedResults,
+        }
+    }
+
+    #showResults(results) {
+        this.#domElements.categoryView.style.display = 'none';
+        this.#domElements.questionView.style.display = 'none';
+        this.#domElements.activityView.style.display = 'none';
+        this.#domElements.resultsView.style.display = 'block';
+
+        this.#domElements.retryBtn.addEventListener('click', () => this.#init());
+
+        this.#domElements.resultsSummaryElements.correctCount.textContent = results.correctAnswers;
+        this.#domElements.resultsSummaryElements.totalQuestions.textContent = results.totalQuestions;
+        this.#domElements.resultsSummaryElements.percentage.textContent = results.percentage + "%";
+        this.#domElements.resultsSummaryElements.detailedResuls.innerHTML = '';
+        results.detailedResults.forEach((result) => {
+            const listItem = document.createElement('li');
+            listItem.className = result.isCorrect ? 'correct-answer' : 'wrong-answer';
+            listItem.innerHTML = `
+              <p><strong>Frage:</strong> ${result.question}</p>
+              <p><strong>Deine Antwort:</strong> ${result.userAnswer}</p>
+              <p><strong>Richtige Antwort:</strong> ${result.correctAnswer}</p>
+            `;
+            this.#domElements.resultsSummaryElements.detailedResuls.appendChild(listItem);
+        });
     }
 
 }

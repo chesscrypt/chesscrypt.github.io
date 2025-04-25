@@ -335,3 +335,49 @@ button:hover {
         background-color: transparent;
     }
 }
+
+.results-container {
+    background-color: #fff;
+    border-radius: 8px;
+    margin: 2rem 0;
+    padding: 2rem;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: none;
+}
+
+.evaluation-summary h2 {
+    color: #343a40;
+    margin-bottom: 1rem;
+}
+
+.evaluation-details h3 {
+    margin: 1.5rem 0 1rem;
+    color: #343a40;
+}
+
+.evaluation-details ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.evaluation-details li {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+}
+
+.correct-answer {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-left: 4px solid #28a745;
+}
+
+.wrong-answer {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-left: 4px solid #dc3545;
+}
+
+.retry-button {
+    margin-top: 1.5rem;
+}

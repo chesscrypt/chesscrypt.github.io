@@ -1,6 +1,6 @@
 const exampleQuizData = {
     "config": {
-        "questionsPerCategory": 4,
+        "questionsPerCategory": 3,
         "questionsBeforeActivity": 5
     },
     "categories": [

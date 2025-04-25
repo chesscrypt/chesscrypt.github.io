@@ -62,6 +62,24 @@
             <button class="btn" id="activity-done-btn">Fertig</button>
         </div>
 
+        <div id="results-view" class="results-container">
+            <div class="evaluation-summary">
+                <h2>Quiz Auswertung</h2>
+                <p>Du hast <strong id="correct-count">0</strong> von <strong id="results-total-questions">0</strong> Fragen
+                    richtig beantwortet.</p>
+                <p>Das entspricht <strong id="percentage">0%</strong>.</p>
+            </div>
+
+            <div class="evaluation-details">
+                <h3>Detaillierte Ergebnisse</h3>
+                <ul id="detailed-results">
+                    <!-- Hier werden die detaillierten Ergebnisse dynamisch eingefügt -->
+                </ul>
+            </div>
+
+            <button id="retry-button" class="btn btn-primary retry-button">Nochmal versuchen</button>
+        </div>
+
         <button id="help-btn" class="help-button" title="Hilfe">?</button>
 
         <div id="help-modal" class="modal">
@@ -232,14 +250,14 @@
 
             function startQuiz(quizData) {
                 const chooseQuizView = document.getElementById('choose-quiz-view');
-                const categoryView = document.getElementById('category-view');
                 chooseQuizView.style.display = 'none';
-                categoryView.style.display = 'block';
 
                 let domElements = {
-                    categoryView: categoryView,
+                    categoryView: document.getElementById('category-view'),
                     questionView: document.getElementById('question-view'),
                     activityView: document.getElementById('activity-view'),
+                    resultsView: document.getElementById('results-view'),
+                    retryBtn: document.getElementById('retry-button'),
                     categoriesContainer: document.getElementById('categories-container'),
                     questionText: document.getElementById('question-text'),
                     categoryTitle: document.getElementById('category-title'),
@@ -251,6 +269,12 @@
                     answeredCountElem: document.getElementById('answered-count'),
                     totalQuestionsElem: document.getElementById('total-questions'),
                     progressBar: document.getElementById('progress-bar'),
+                    resultsSummaryElements: {
+                        correctCount: document.getElementById('correct-count'),
+                        totalQuestions: document.getElementById('results-total-questions'),
+                        percentage: document.getElementById('percentage'),
+                        detailedResuls: document.getElementById('detailed-results'),
+                    }
                 }
                 const game = new Quiz(quizData, domElements);
             }
