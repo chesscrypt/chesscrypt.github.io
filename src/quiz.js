@@ -2,12 +2,14 @@ class Quiz {
     #quizData;
     #domElements;
     #detailedResults;
-    #categoriesUsed;
     #answeredQuestions;
-    #totalQuestions;
     #questionsAsked;
     #questionsUntilActivity;
     #sounds;
+
+    #categoryUsage;
+    #lockedCategory;
+    #categoryIndices;
 
     constructor(quizData, domElements) {
         this.#quizData = quizData;
@@ -24,25 +26,23 @@ class Quiz {
     }
 
     #init() {
-        this.#totalQuestions = 0;
         this.#answeredQuestions = 0;
-        this.#categoriesUsed = {};
+        this.#categoryUsage = {};
+        this.#quizData.categories.forEach(cat => {
+            this.#categoryUsage[cat.name] = 0;
+        });
+        this.#lockedCategory = null;
+        this.#categoryIndices = {};
         this.#questionsAsked = {};
         this.#questionsUntilActivity = this.#quizData.config.questionsBeforeActivity;
-
-        this.#quizData.categories.forEach(category => {
-            if (category.questions.length >= this.#quizData.config.questionsPerCategory) {
-                this.#totalQuestions += this.#quizData.config.questionsPerCategory;
-            }
-            else {
-                console.log("questions per category less than questions in category")
-                this.#totalQuestions += category.questions.length;
-            }
-        });
-
-        this.#domElements.totalQuestionsElem.textContent = this.#totalQuestions;
         this.#detailedResults = [];
 
+        this.#quizData.categories.forEach((cat, i) => {
+            this.#categoryIndices[cat.name] = i;
+        });
+
+        const total = this.#quizData.config.maxQuestionsPerGame;
+        this.#domElements.totalQuestionsElem.textContent = total;        
 
         this.#renderCategories();
         this.#updateProgress();
@@ -55,6 +55,7 @@ class Quiz {
                 this.#backToCategories();
             }
         });
+
         this.#domElements.activityDoneBtn.addEventListener('click', () => this.#backToCategories());
 
         this.#domElements.categoryView.style.display = 'block';
@@ -62,20 +63,24 @@ class Quiz {
     }
 
     #allQuestionsAsked() {
-        return this.#answeredQuestions >= this.#totalQuestions;
+        return this.#answeredQuestions >= this.#quizData.config.maxQuestionsPerGame;
+    }
+
+    #categoryLimitReached(catKey) {
+        return this.#categoryUsage[catKey] >= this.#quizData.config.questionsPerCategory;
     }
 
     #renderCategories() {
         this.#domElements.categoriesContainer.innerHTML = '';
 
         this.#quizData.categories.forEach((category, index) => {
+            const catName = category.name;
+
             const categoryElement = document.createElement('div');
             categoryElement.className = 'category';
-            categoryElement.textContent = category.name;
+            categoryElement.textContent = catName;
 
-            const usedCount = this.#categoriesUsed[index] || 0;
-
-            // Disable category if max questions asked or no more questions for this category
+            const usedCount = this.#categoryUsage[catName];
             let allAsked = true;
             for (let i = 0; i < category.questions.length; i++) {
                 const questionKey = `${index}-${i}`;
@@ -85,7 +90,7 @@ class Quiz {
                 }
             }
 
-            if (usedCount >= this.#quizData.config.questionsPerCategory || allAsked) {
+            if (usedCount >= this.#quizData.config.questionsPerCategory || allAsked || (this.#lockedCategory && this.#lockedCategory === catName)) {
                 categoryElement.classList.add('disabled');
             } else {
                 categoryElement.addEventListener('click', () => this.#selectCategory(index));
@@ -95,35 +100,51 @@ class Quiz {
         });
     }
 
-    #selectCategory(categoryIndex) {
-        if (!this.#categoriesUsed[categoryIndex]) {
-            this.#categoriesUsed[categoryIndex] = 0;
-        }
-        this.#categoriesUsed[categoryIndex]++;
 
-        // Choose, random not already played question
+    #selectCategory(categoryIndex) {
+        const catName = this.#quizData.categories[categoryIndex].name;
+        const catKey = catName;
+    
+        this.#categoryUsage[catKey]++;
+    
+        if (!this.#lockedCategory && this.#categoryUsage[catKey] >= this.#quizData.config.questionsPerCategory) {
+            this.#lockedCategory = catKey;
+        }
+    
         const category = this.#quizData.categories[categoryIndex];
         const availableQuestions = [];
-
+    
         for (let i = 0; i < category.questions.length; i++) {
             const questionKey = `${categoryIndex}-${i}`;
             if (!this.#questionsAsked[questionKey]) {
                 availableQuestions.push(i);
             }
         }
-
+    
         if (availableQuestions.length > 0) {
             const randomIndex = Math.floor(Math.random() * availableQuestions.length);
             const questionIndex = availableQuestions[randomIndex];
-
             const questionKey = `${categoryIndex}-${questionIndex}`;
             this.#questionsAsked[questionKey] = true;
-
+    
             this.#showQuestion(category, category.questions[questionIndex]);
         } else {
             this.#backToCategories();
         }
+    
+        const allFull = Object.values(this.#categoryUsage)
+            .every(count => count >= this.#quizData.config.questionsPerCategory);
+    
+        if (allFull) {
+            this.#lockedCategory = null;
+    
+            this.#quizData.categories.forEach(cat => {
+                this.#categoryUsage[cat.name] = 0;
+            });
+        }
     }
+    
+
 
     #showQuestion(category, question) {
         this.#domElements.categoryView.style.display = 'none';
@@ -147,7 +168,7 @@ class Quiz {
     }
 
     #checkAnswer(question, selectedIndex, correctIndex) {
-        const isCorrect = selectedIndex === correctIndex
+        const isCorrect = selectedIndex === correctIndex;
         const options = document.querySelectorAll('.option');
 
         options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
@@ -156,19 +177,19 @@ class Quiz {
         if (isCorrect) {
             this.#domElements.feedbackElem.textContent = 'Richtig!';
             this.#sounds.correct.play();
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
         } else {
             this.#domElements.feedbackElem.textContent = 'Falsch!';
             document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-            this.#sounds.incorrect.play()
+            setTimeout(() => document.body.classList.remove('shake'), 500);
+            this.#sounds.incorrect.play();
         }
 
-        // disable all answer options
-        options.forEach(option => {
-            option.style.pointerEvents = 'none';
-        });
+        options.forEach(opt => opt.style.pointerEvents = 'none');
         this.#domElements.nextBtn.classList.remove('hidden');
 
         this.#answeredQuestions++;
@@ -177,7 +198,7 @@ class Quiz {
             question: question,
             selectedOptionIndex: selectedIndex,
             correctOptionIndex: correctIndex,
-        })
+        });
 
         this.#updateProgress();
     }
@@ -205,44 +226,39 @@ class Quiz {
         const activity = this.#quizData.activityQuestions[randomIndex];
 
         this.#domElements.activityText.textContent = activity.question;
-
         this.#sounds.activity.playInLoop();
+
         document.body.classList.add('flash');
-        setTimeout(() => {
-            document.body.classList.remove('flash');
-        }, 1000);
+        setTimeout(() => document.body.classList.remove('flash'), 1000);
     }
 
     #updateProgress() {
         this.#domElements.answeredCountElem.textContent = this.#answeredQuestions;
-        const progressPercentage = (this.#answeredQuestions / this.#totalQuestions) * 100;
-        this.#domElements.progressBar.style.width = `${progressPercentage}%`;
+    
+        const total = this.#quizData.config.maxQuestionsPerGame;
+        const percentage = (this.#answeredQuestions / total) * 100;
+    
+        this.#domElements.progressBar.style.width = `${percentage}%`;
     }
+    
 
     #calculateResults() {
         let correctAnswers = 0;
-        let totalQuestions = this.#totalQuestions;
-        let detailedResults = [];
-        
-        this.#detailedResults.forEach((detailedResult) => {
-            const questionAsked = detailedResult.question;
-            const isCorrect = detailedResult.selectedOptionIndex === detailedResult.correctOptionIndex;
-            detailedResults.push({
-                question: questionAsked.question,
-                userAnswer: questionAsked.options[detailedResult.selectedOptionIndex],
-                correctAnswer: questionAsked.options[detailedResult.correctOptionIndex],
+        const detailedResults = this.#detailedResults.map(result => {
+            const isCorrect = result.selectedOptionIndex === result.correctOptionIndex;
+            if (isCorrect) correctAnswers++;
+            return {
+                question: result.question.question,
+                userAnswer: result.question.options[result.selectedOptionIndex],
+                correctAnswer: result.question.options[result.correctOptionIndex],
                 isCorrect: isCorrect
-            });
-            if (isCorrect) {
-                correctAnswers++;
-            }
+            };
         });
 
-        const percentage = Math.round((correctAnswers / totalQuestions) * 100);
-
+        const percentage = Math.round((correctAnswers / this.#quizData.config.maxQuestionsPerGame) * 100);
         return {
             correctAnswers,
-            totalQuestions,
+            totalQuestions: this.#quizData.config.questionsPerCategory * 2,
             percentage,
             detailedResults,
         }
@@ -260,7 +276,8 @@ class Quiz {
         this.#domElements.resultsSummaryElements.totalQuestions.textContent = results.totalQuestions;
         this.#domElements.resultsSummaryElements.percentage.textContent = results.percentage + "%";
         this.#domElements.resultsSummaryElements.detailedResuls.innerHTML = '';
-        results.detailedResults.forEach((result) => {
+
+        results.detailedResults.forEach(result => {
             const listItem = document.createElement('li');
             listItem.className = result.isCorrect ? 'correct-answer' : 'wrong-answer';
             listItem.innerHTML = `
@@ -271,5 +288,4 @@ class Quiz {
             this.#domElements.resultsSummaryElements.detailedResuls.appendChild(listItem);
         });
     }
-
 }

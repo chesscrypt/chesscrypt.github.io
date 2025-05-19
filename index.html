@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiztopia</title>
+    <title>NarrenRate</title>
     <link rel="icon" type="image/png" href="./src/assets/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="./src/assets/images/favicon.svg" />
     <link rel="shortcut icon" href="./src/assets/images/favicon.ico" />
@@ -17,7 +17,7 @@
 <body>
     <header>
         <img src="./src/assets/images/logo-transparent.svg" alt="logo" width="48" height="48">
-        <h1>Quiztopia</h1>
+        <h1>NarrenRate</h1>
         <img src="./src/assets/images/logo-transparent.svg" alt="logo" width="48" height="48">
     </header>
 
@@ -56,8 +56,11 @@
             <button class="btn hidden" id="next-btn">Weiter</button>
         </div>
 
+        <div class="confetti"></div>
         <div id="activity-view" class="activity-question">
-            <h2 class="activity-title">MITMACH-RUNDE!</h2>
+            <h2 class="activity-title">
+                🎭 <span class="wiggle">Mitmachrunde!</span> 🎉
+            </h2>
             <div class="activity-description" id="activity-text">Hier erscheint die Aktivitätsaufgabe</div>
             <button class="btn" id="activity-done-btn">Fertig</button>
         </div>
@@ -65,7 +68,8 @@
         <div id="results-view" class="results-container">
             <div class="evaluation-summary">
                 <h2>Quiz Auswertung</h2>
-                <p>Du hast <strong id="correct-count">0</strong> von <strong id="results-total-questions">0</strong> Fragen
+                <p>Du hast <strong id="correct-count">0</strong> von <strong id="results-total-questions">0</strong>
+                    Fragen
                     richtig beantwortet.</p>
                 <p>Das entspricht <strong id="percentage">0%</strong>.</p>
             </div>
@@ -208,6 +212,7 @@
             </div>
         </div>
 
+        <script src="./src/assets/canvas-confetti.min.js"></script>
         <script src="./src/assets/quiz-data.js"></script>
         <script src="./src/i18n.js"></script>
         <script src="./src/json.js"></script>
